@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Sprite Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 4096
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: fb479f71d8f794e4bb9ed99923c44ce7, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: d9e34830046b42445b52b290dfdc7542, type: 3}
+  - {fileID: -5479921857942634835, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 2036061230151591097, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 6594557440829556254, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: -1940456202506053129, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 21300000, guid: a85333dcf95d34364a5ee626505b54fb, type: 2}
+  - {fileID: 7542711864194345869, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 3651879640896948590, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: -4269496591511573272, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: -4832819968969807899, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 9162021035723895580, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 8847913801677857631, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 3008820433929852968, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: -2025353857844400533, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: -3652447770766559047, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 2955910226755407815, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 2426290560430359253, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: -5972744567714416227, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 5667303254235720261, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  - {fileID: 2444840706446671367, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Star
+  - OK
+  - SidePanelBoosterBack
+  - Hourglass
+  - Flask Red
+  - Btn
+  - Btn
+  - Back
+  - Checkmark
+  - Pick and press OK
+  - Flask Green
+  - ArrowButton
+  - Bomb
+  - Highlighted copy
+  - SidePanel
+  - Lock
+  - Tittle
+  - Shield
+  - Flask Blue
+  - RefreshBtn
+  m_RenderDataMap: {}
+  m_Tag: Sprite Atlas
+  m_IsVariant: 0
