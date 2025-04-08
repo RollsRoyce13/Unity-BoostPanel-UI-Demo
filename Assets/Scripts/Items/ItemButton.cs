@@ -14,11 +14,13 @@ namespace Items
 		[SerializeField] private Image highlightImage;
 		[SerializeField] private ParticleSystem particleSystem;
 		
+		public ItemSO ItemSO => _itemSO;
+		
 		private Button _button => GetComponent<Button>();
 		private Image _image => _button.image;
 		
 		private ItemSO _itemSO;
-
+		
 		private void OnDestroy()
 		{
 			UnsubscribeFromEvents();
@@ -34,6 +36,11 @@ namespace Items
 			_itemSO = itemSO;
 
 			SetSprite(_itemSO.Sprite);
+			DisableHighlight();
+		}
+
+		public void DisableHighlight()
+		{
 			highlightImage.gameObject.SetActive(false);
 		}
 		

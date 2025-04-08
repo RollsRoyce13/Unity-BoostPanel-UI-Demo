@@ -18,6 +18,7 @@ namespace Items
 		[SerializeField] private List<ItemButton> itemButtonsList;
 
 		private const int TWO_ITEMS = 2;
+		private const int THREE_ITEMS = 3;
 		
 		private List<ItemSO> _currentItemsList = new List<ItemSO>();
 
@@ -56,34 +57,17 @@ namespace Items
 			
 			if (_currentItemsList.Count == 0)
 			{
-				_currentItemsList = shuffledItems.Take(3).ToList();
+				_currentItemsList = shuffledItems.Take(THREE_ITEMS).ToList();
 			}
 			else
 			{
-				ItemSO repeatedItem = GetRepeatedItemFromList();
-				
-				_currentItemsList = newItems.Take(TWO_ITEMS).ToList();
-        
-				if (repeatedItem != null && !_currentItemsList.Contains(repeatedItem))
-				{
-					_currentItemsList.Add(repeatedItem);
-				}
-				
-				if (_currentItemsList.Count < 3)
-				{
-					var additionalItem = shuffledItems.FirstOrDefault(item => !_currentItemsList.Contains(item));
-					
-					if (additionalItem != null)
-					{
-						_currentItemsList.Add(additionalItem);
-					}
-				}
+				FillCurrentItemsList(newItems, shuffledItems);
 			}
 			
 			InitButtons();
 			OnRefreshClicked?.Invoke();
 		}
-		
+
 		public void Ok()
 		{
 			OnItemSelected?.Invoke(_currentSelectedItem);
@@ -98,7 +82,7 @@ namespace Items
 				itemButton.OnItemButtonClicked += ClickItem;
 			}
 		}
-		
+
 		private void UnsubscribeFromEvents()
 		{
 			foreach (var itemButton in itemButtonsList)
@@ -107,11 +91,34 @@ namespace Items
 			}
 		}
 
+		private void FillCurrentItemsList(List<ItemSO> newItems, List<ItemSO> shuffledItems)
+		{
+			ItemSO repeatedItem = GetRepeatedItemFromList();
+				
+			_currentItemsList = newItems.Take(TWO_ITEMS).ToList();
+        
+			if (repeatedItem != null && !_currentItemsList.Contains(repeatedItem))
+			{
+				_currentItemsList.Add(repeatedItem);
+			}
+				
+			if (_currentItemsList.Count < THREE_ITEMS)
+			{
+				var additionalItem = shuffledItems.FirstOrDefault(item => !_currentItemsList.Contains(item));
+					
+				if (additionalItem != null)
+				{
+					_currentItemsList.Add(additionalItem);
+				}
+			}
+		}
+
 		private void ClickItem(ItemSO item)
 		{
 			_currentSelectedItem = item;
 			OnItemClicked?.Invoke(_currentSelectedItem);
 			
+			DisableHighlight();
 			Debug.Log($"Button with booster: {_currentSelectedItem.BoosterType} was clicked");
 		}
 
@@ -120,6 +127,16 @@ namespace Items
 			for (var i = 0; i < _currentItemsList.Count; i++)
 			{
 				itemButtonsList[i].Init(_currentItemsList[i]);
+			}
+		}
+		
+		private void DisableHighlight()
+		{
+			foreach (var itemButton in itemButtonsList)
+			{
+				if (itemButton.ItemSO == _currentSelectedItem) continue;
+				
+				itemButton.DisableHighlight();
 			}
 		}
 		
