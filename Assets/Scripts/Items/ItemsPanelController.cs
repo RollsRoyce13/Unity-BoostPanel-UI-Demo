@@ -42,7 +42,7 @@ namespace Items
 			// Check newItems count and fill with missing items
 			while (newItems.Count < TWO_ITEMS)
 			{
-				var filler = shuffledItems.FirstOrDefault(item => !newItems.Contains(item));
+				var filler = shuffledItems.FirstOrDefault(item => !newItems.Contains(item) && !_currentItemsList.Contains(item));
 				
 				if (filler != null)
 				{
@@ -53,19 +53,31 @@ namespace Items
 					break;
 				}
 			}
-
-			ItemSO repeatedItem = null;
 			
-			if (_currentItemsList.Count > 0)
+			if (_currentItemsList.Count == 0)
 			{
-				repeatedItem = GetRepeatedItemFromList();
+				_currentItemsList = shuffledItems.Take(3).ToList();
 			}
-			
-			_currentItemsList = newItems.ToList();
-			
-			if (repeatedItem != null && !_currentItemsList.Contains(repeatedItem))
+			else
 			{
-				_currentItemsList.Add(repeatedItem);
+				ItemSO repeatedItem = GetRepeatedItemFromList();
+				
+				_currentItemsList = newItems.Take(TWO_ITEMS).ToList();
+        
+				if (repeatedItem != null && !_currentItemsList.Contains(repeatedItem))
+				{
+					_currentItemsList.Add(repeatedItem);
+				}
+				
+				if (_currentItemsList.Count < 3)
+				{
+					var additionalItem = shuffledItems.FirstOrDefault(item => !_currentItemsList.Contains(item));
+					
+					if (additionalItem != null)
+					{
+						_currentItemsList.Add(additionalItem);
+					}
+				}
 			}
 			
 			InitButtons();
