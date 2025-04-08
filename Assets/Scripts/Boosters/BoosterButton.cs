@@ -2,24 +2,23 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Items
+namespace Boosters
 {
 	[RequireComponent(typeof(Button))]
 	[RequireComponent(typeof(Image))]
-	public class ItemButton : MonoBehaviour
+	public class BoosterButton : MonoBehaviour
 	{
-		public event Action<ItemSO> OnItemButtonClicked;
+		public event Action<BoosterSO> OnItemButtonClicked;
 		
 		[Header("Links")]
 		[SerializeField] private Image highlightImage;
-		[SerializeField] private ParticleSystem particleSystem;
 		
-		public ItemSO ItemSO => _itemSO;
+		public BoosterSO BoosterSo => _boosterSo;
 		
 		private Button _button => GetComponent<Button>();
 		private Image _image => _button.image;
 		
-		private ItemSO _itemSO;
+		private BoosterSO _boosterSo;
 		
 		private void OnDestroy()
 		{
@@ -31,11 +30,11 @@ namespace Items
 			SubscribeToEvents();
 		}
 
-		public void Init(ItemSO itemSO)
+		public void Init(BoosterSO boosterSo)
 		{
-			_itemSO = itemSO;
+			_boosterSo = boosterSo;
 
-			SetSprite(_itemSO.Sprite);
+			SetSprite(_boosterSo.Sprite);
 			DisableHighlight();
 		}
 
@@ -58,19 +57,7 @@ namespace Items
 		{
 			highlightImage.gameObject.SetActive(true);
 			
-			OnItemButtonClicked?.Invoke(_itemSO);
-		}
-
-		private void PlayParticle()
-		{
-			if (particleSystem != null)
-			{
-				particleSystem.Play();
-			}
-			else
-			{
-				Debug.LogWarning($"Particle System not assigned on {gameObject.name}");
-			}
+			OnItemButtonClicked?.Invoke(_boosterSo);
 		}
 
 		private void SetSprite(Sprite sprite)
