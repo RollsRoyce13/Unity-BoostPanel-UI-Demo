@@ -12,6 +12,9 @@ namespace Boosters
 		public UnityEvent OnRefreshClicked;
 		public UnityEvent<BoosterSO> OnBoosterClicked;
 		public UnityEvent<BoosterSO> OnBoosterSelected;
+
+		[Header("Links")]
+		[SerializeField] private SidePanel sidePanel;
 		
 		[Header("Boosters List")]
 		[SerializeField] private List<BoosterSO> boostersList;
@@ -155,7 +158,7 @@ namespace Boosters
 				
 				BoosterImage boosterImage = Instantiate(boosterImagePrefab, transform, false);
 
-				boosterImage.SetSprite(_currentSelectedBooster.Sprite);
+				boosterImage.Init(sidePanel, _currentSelectedBooster);
 				boosterImage.transform.localPosition = targetRectTransform.localPosition;
 			}
 		}

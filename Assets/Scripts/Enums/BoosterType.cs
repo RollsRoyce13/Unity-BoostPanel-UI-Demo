@@ -1,4 +1,4 @@
-namespace Enums
+namespace Boosters
 {
 	public enum BoosterType
 	{

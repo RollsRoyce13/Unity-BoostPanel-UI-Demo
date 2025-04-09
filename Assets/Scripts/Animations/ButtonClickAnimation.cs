@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Animations
+namespace Boosters
 {
 	[RequireComponent(typeof(Button))]
 	[RequireComponent(typeof(Animator))]

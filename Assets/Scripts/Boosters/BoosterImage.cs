@@ -1,5 +1,5 @@
 using System.Collections;
-using Animations;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,33 +14,78 @@ namespace Boosters
 		[SerializeField] private Image checkmarkImage;
 		[SerializeField] private new ParticleSystem particleSystem;
 		
-		[Header("Settings")]
+		[Header("Animation Settings")]
 		[SerializeField] private Vector3 centerSize = new Vector3(1.2f, 1.2f, 1.0f);
-		[SerializeField, Min(0f)] private float moveToCenterDuration = 1f;
+		[SerializeField] private Vector3 slotsSize = new Vector3(0.55f, 0.55f, 1.0f);
+		[SerializeField] private Ease slotsEase;
+		[SerializeField, Range(0f, 5f)] private float animationDuration = 1f;
 		
 		private Image _image => GetComponent<Image>();
 		private MoveToPosition _moveToPosition => GetComponent<MoveToPosition>();
-		private ScaleResizer ScaleResizer =>  GetComponent<ScaleResizer>();
+		private ScaleResizer _scaleResizer =>  GetComponent<ScaleResizer>();
 
+		private SidePanel _sidePanel;
+		private BoosterSO _booster;
+		
+		private Coroutine _coroutine;
+		
 		private void Start()
 		{
-			StartCoroutine(Animate());
+			StartAnimate();
 		}
 
-		public void SetSprite(Sprite sprite)
+		public void Init(SidePanel sidePanel, BoosterSO booster)
 		{
-			_image.sprite = sprite;
-		}
-
-		private IEnumerator Animate()
-		{
-			_moveToPosition.Move(Vector3.zero, moveToCenterDuration);
-			ScaleResizer.ChangeSize(centerSize, moveToCenterDuration);
-
-			yield return new WaitForSeconds(moveToCenterDuration);
+			_sidePanel = sidePanel;
+			_booster = booster;
 			
+			_image.sprite = _booster.Sprite;
+		}
+
+		private void StartAnimate()
+		{
+			if (_coroutine != null)
+			{
+				StopCoroutine(_coroutine);
+				_coroutine = null;
+			}
+
+			_coroutine = StartCoroutine(ChangeStates());
+		}
+
+		private IEnumerator ChangeStates()
+		{
+			_moveToPosition.LocalMove(Vector3.zero, animationDuration);
+			_scaleResizer.ChangeSize(centerSize, animationDuration);
+
+			yield return new WaitForSeconds(animationDuration);
+			
+			_sidePanel.OpenAndFreezePanel();
 			ActivateCheckmark();
 			PlayParticle();
+			
+			yield return new WaitForSeconds(animationDuration);
+
+			MoveToSlot();
+			Destroy(gameObject, animationDuration);
+		}
+
+		private void MoveToSlot()
+		{
+			var slotImage = _sidePanel.GetFreeSlotImage();
+
+			if (slotImage != null)
+			{
+				slotImage.SetSpriteWithDelay(_booster.Sprite, animationDuration);
+				transform.SetParent(slotImage.transform);
+			
+				_moveToPosition.RectMove(Vector3.zero, animationDuration, slotsEase);
+				_scaleResizer.ChangeSize(slotsSize, animationDuration);
+			}
+			else
+			{
+				Debug.LogWarning("slotImage is null");
+			}
 		}
 
 		private void ActivateCheckmark()

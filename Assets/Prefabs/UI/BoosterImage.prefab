@@ -246,11 +246,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfbd00ad74d0446f5badb9292d8e82f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightImage: {fileID: 6977149954127486070}
   checkmarkImage: {fileID: 8963040285441667625}
   particleSystem: {fileID: 294259377382045063}
   centerSize: {x: 1.3, y: 1.3, z: 1}
-  moveToCenterDuration: 1
+  slotsSize: {x: 0.55, y: 0.55, z: 1}
+  slotsEase: 2
+  animationDuration: 1
 --- !u!114 &5457561946774720662
 MonoBehaviour:
   m_ObjectHideFlags: 0
