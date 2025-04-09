@@ -10,7 +10,7 @@ namespace Boosters
 	[RequireComponent(typeof(ScaleResizer))]
 	public class BoosterImage : MonoBehaviour
 	{
-		[Header("Links")]
+		[Header("References")]
 		[SerializeField] private Image checkmarkImage;
 		[SerializeField] private new ParticleSystem particleSystem;
 		
@@ -20,72 +20,101 @@ namespace Boosters
 		[SerializeField] private Ease slotsEase;
 		[SerializeField, Range(0f, 5f)] private float animationDuration = 1f;
 		
-		private Image _image => GetComponent<Image>();
-		private MoveToPosition _moveToPosition => GetComponent<MoveToPosition>();
-		private ScaleResizer _scaleResizer =>  GetComponent<ScaleResizer>();
+		private Image _image;
+		private MoveToPosition _moveToPosition;
+		private ScaleResizer _scaleResizer;
 
 		private SidePanel _sidePanel;
 		private BoosterSO _booster;
 		
-		private Coroutine _coroutine;
+		private Coroutine _animationCoroutine;
 		
-		private void Start()
+		private void Awake()
 		{
-			StartAnimate();
+			CacheComponents();
+			StartAnimationSequence();
 		}
-
-		public void Init(SidePanel sidePanel, BoosterSO booster)
+		
+		public void Initialize(SidePanel sidePanel, BoosterSO booster)
 		{
+			if (sidePanel == null || booster == null)
+			{
+				Debug.LogError("Initialization failed: SidePanel or BoosterSO is null.");
+				return;
+			}
+            
 			_sidePanel = sidePanel;
 			_booster = booster;
 			
+			UpdateImage();
+		}
+
+		private void CacheComponents()
+		{
+			_image = GetComponent<Image>();
+			_moveToPosition = GetComponent<MoveToPosition>();
+			_scaleResizer = GetComponent<ScaleResizer>();
+		}
+
+		private void StartAnimationSequence()
+		{
+			if (_animationCoroutine != null)
+			{
+				StopCoroutine(_animationCoroutine);
+			}
+
+			_animationCoroutine = StartCoroutine(AnimateSequence());
+		}
+
+		private void UpdateImage()
+		{
 			_image.sprite = _booster.Sprite;
 		}
 
-		private void StartAnimate()
+		private IEnumerator AnimateSequence()
 		{
-			if (_coroutine != null)
-			{
-				StopCoroutine(_coroutine);
-				_coroutine = null;
-			}
-
-			_coroutine = StartCoroutine(ChangeStates());
-		}
-
-		private IEnumerator ChangeStates()
-		{
-			_moveToPosition.LocalMove(Vector3.zero, animationDuration);
-			_scaleResizer.ChangeSize(centerSize, animationDuration);
+			PlayEntryAnimation();
 
 			yield return new WaitForSeconds(animationDuration);
 			
-			_sidePanel.OpenAndFreezePanel();
-			ActivateCheckmark();
-			PlayParticle();
-			
+			SetSelectedState();
+
 			yield return new WaitForSeconds(animationDuration);
 
 			MoveToSlot();
 			Destroy(gameObject, animationDuration);
+			
+			_animationCoroutine = null;
+		}
+
+		private void PlayEntryAnimation()
+		{
+			_moveToPosition.LocalMove(Vector3.zero, animationDuration);
+			_scaleResizer.ChangeSize(centerSize, animationDuration);
+		}
+
+		private void SetSelectedState()
+		{
+			_sidePanel.OpenAndFreezePanel();
+			ActivateCheckmark();
+			PlayParticle();
 		}
 
 		private void MoveToSlot()
 		{
 			var slotImage = _sidePanel.GetFreeSlotImage();
 
-			if (slotImage != null)
+			if (slotImage == null)
 			{
-				slotImage.SetSpriteWithDelay(_booster.Sprite, animationDuration);
-				transform.SetParent(slotImage.transform);
+				Debug.LogWarning("No free slot image found.");
+				return;
+			}
 			
-				_moveToPosition.RectMove(Vector3.zero, animationDuration, slotsEase);
-				_scaleResizer.ChangeSize(slotsSize, animationDuration);
-			}
-			else
-			{
-				Debug.LogWarning("slotImage is null");
-			}
+			slotImage.SetSpriteWithDelay(_booster.Sprite, animationDuration);
+			transform.SetParent(slotImage.transform);
+			
+			_moveToPosition.RectMove(Vector3.zero, animationDuration, slotsEase);
+			_scaleResizer.ChangeSize(slotsSize, animationDuration);
 		}
 
 		private void ActivateCheckmark()

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ff5c5d414d64ad99a4ffb64a38640f, type: 3}
   m_Name: Bomb
   m_EditorClassIdentifier: 
-  <BoosterType>k__BackingField: 0
-  <Sprite>k__BackingField: {fileID: 3008820433929852968, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  boosterType: 0
+  sprite: {fileID: 3008820433929852968, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}

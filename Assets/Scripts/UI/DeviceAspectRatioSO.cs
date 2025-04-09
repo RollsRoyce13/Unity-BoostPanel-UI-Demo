@@ -5,27 +5,28 @@ namespace Boosters
 	[CreateAssetMenu (menuName = "Device Aspect Ratio/Device Aspect Ratio")]
 	public class DeviceAspectRatioSO : ScriptableObject
 	{
-		[Tooltip("This is threshold value for Iphone 8, Iphone SE 2 etc.")]
+		[Header("Settings")]
+		[Tooltip("Threshold value for 16:9 screens (e.g., iPhone 8, iPhone SE 2, etc.).")]
 		[SerializeField] private float aspectRatioThreshold16To9 = 1.8f;
 		[SerializeField] private bool isVerticalScreen = true;
 
 		public bool IsLongScreen()
 		{
-			float aspectRatio = 0;
+			float aspectRatio = CalculateAspectRatio();
 
-			if (isVerticalScreen)
-			{
-				aspectRatio = (float)Screen.height / Screen.width;
-			}
-			else
-			{
-				aspectRatio = (float)Screen.width / Screen.height;
-			}
-			
+#if UNITY_EDITOR
 			Debug.Log($"Screen Width: {Screen.width}, Height: {Screen.height}. " +
-			          $"Current aspect ratio is: {aspectRatio}");
-			
+			          $"Aspect Ratio: {aspectRatio}, Threshold: {aspectRatioThreshold16To9}");
+#endif
+
 			return aspectRatio > aspectRatioThreshold16To9;
+		}
+		
+		private float CalculateAspectRatio()
+		{
+			return isVerticalScreen
+				? (float)Screen.height / Screen.width
+				: (float)Screen.width / Screen.height;
 		}
 	}
 }

@@ -12,16 +12,33 @@ namespace Boosters
 		
 		public void RectMove(Vector3 position, float duration)
 		{
-			RectTransform rectTransform = GetComponent<RectTransform>();
+			var rectTransform = GetRectTransform();
+
+			if (rectTransform == null) return;
 			
 			_tween = rectTransform.DOAnchorPos(position, duration).SetEase(easeType);
 		}
 		
 		public void RectMove(Vector3 position, float duration, Ease ease)
 		{
-			RectTransform rectTransform = GetComponent<RectTransform>();
+			var rectTransform = GetRectTransform();
+
+			if (rectTransform == null) return;
 			
 			_tween = rectTransform.DOAnchorPos(position, duration).SetEase(ease);
+		}
+
+		private RectTransform GetRectTransform()
+		{
+			RectTransform rectTransform = GetComponent<RectTransform>();
+
+			if (rectTransform == null)
+			{
+				Debug.LogWarning($"RectTransform not found on {gameObject.name}.");
+				return null;
+			}
+
+			return rectTransform;
 		}
 	}
 }

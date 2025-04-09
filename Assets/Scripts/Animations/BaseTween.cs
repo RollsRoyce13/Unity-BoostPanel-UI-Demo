@@ -20,6 +20,7 @@ namespace Boosters
 			if (_tween != null && _tween.IsActive())
 			{
 				_tween.Kill();
+				_tween = null;
 			}
 		}
 	}

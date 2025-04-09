@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ff5c5d414d64ad99a4ffb64a38640f, type: 3}
   m_Name: Shield
   m_EditorClassIdentifier: 
-  <BoosterType>k__BackingField: 5
-  <Sprite>k__BackingField: {fileID: -5972744567714416227, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}
+  boosterType: 5
+  sprite: {fileID: -5972744567714416227, guid: 45463df948b5f426aad4740f3af8aef5, type: 3}

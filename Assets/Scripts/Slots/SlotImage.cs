@@ -12,26 +12,38 @@ namespace Boosters
 		
 		public bool IsLocked => isLocked;
 		
-		private Image _image => GetComponent<Image>();
+		private Image _image;
+		private Coroutine _setSpriteCoroutine;
 
-		private Coroutine _coroutine;
-
+		private void Awake()
+		{
+			_image = GetComponent<Image>();
+		}
+		
 		public void SetSpriteWithDelay(Sprite sprite, float delay)
 		{
-			if (_coroutine != null)
+			if (_setSpriteCoroutine != null)
 			{
-				StopCoroutine(_coroutine);
-				_coroutine = null;
+				StopCoroutine(_setSpriteCoroutine);
 			}
 			
-			_coroutine = StartCoroutine(SetSprite(sprite, delay));
+			_setSpriteCoroutine = StartCoroutine(SetSpriteDelayed(sprite, delay));
 		}
 
-		private IEnumerator SetSprite(Sprite sprite, float delay)
+		private IEnumerator SetSpriteDelayed(Sprite sprite, float delay)
 		{
 			yield return new WaitForSeconds(delay);
 
-			_image.sprite = sprite;
+			if (_image != null)
+			{
+				_image.sprite = sprite;
+			}
+			else
+			{
+				Debug.LogWarning($"Image not assigned on {gameObject.name}");
+			}
+			
+			_setSpriteCoroutine = null;
 		}
 	}
 }

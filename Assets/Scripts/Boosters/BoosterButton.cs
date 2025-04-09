@@ -10,13 +10,13 @@ namespace Boosters
 	{
 		public event Action<BoosterSO> OnBoosterButtonClicked;
 		
-		[Header("Links")]
+		[Header("References")]
 		[SerializeField] private Image highlightImage;
 		
 		public BoosterSO BoosterSo => _boosterSo;
 		
 		private Button _button => GetComponent<Button>();
-		private Image _image => _button.image;
+		private Image _buttonImage => _button.image;
 		
 		private BoosterSO _boosterSo;
 		
@@ -30,8 +30,14 @@ namespace Boosters
 			SubscribeToEvents();
 		}
 
-		public void Init(BoosterSO boosterSo)
+		public void Initialize(BoosterSO boosterSo)
 		{
+			if (boosterSo == null)
+			{
+				Debug.LogWarning($"BoosterSO is null when initializing button on {gameObject.name}");
+				return;
+			}
+			
 			_boosterSo = boosterSo;
 
 			SetSprite(_boosterSo.Sprite);
@@ -40,7 +46,14 @@ namespace Boosters
 
 		public void DisableHighlight()
 		{
-			highlightImage.gameObject.SetActive(false);
+			if (highlightImage != null)
+			{
+				highlightImage.gameObject.SetActive(false);
+			}
+			else
+			{
+				Debug.LogWarning($"Highlight image is not assigned on {gameObject.name}");
+			}
 		}
 		
 		private void SubscribeToEvents()
@@ -55,16 +68,19 @@ namespace Boosters
 
 		private void OnButtonClick()
 		{
-			highlightImage.gameObject.SetActive(true);
-			
+			if (highlightImage != null)
+			{
+				highlightImage.gameObject.SetActive(true);
+			}
+
 			OnBoosterButtonClicked?.Invoke(_boosterSo);
 		}
 
 		private void SetSprite(Sprite sprite)
 		{
-			if (_image != null)
+			if (_buttonImage != null)
 			{
-				_image.sprite = sprite;
+				_buttonImage.sprite = sprite;
 			}
 			else
 			{

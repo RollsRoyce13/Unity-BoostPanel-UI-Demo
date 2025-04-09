@@ -5,7 +5,10 @@ namespace Boosters
 	[CreateAssetMenu (menuName = "Boosters/Booster")]
 	public class BoosterSO : ScriptableObject
 	{
-		[field: SerializeField] public BoosterType BoosterType { get; private set; }
-		[field: SerializeField] public Sprite Sprite { get; private set; }
+		[SerializeField] private BoosterType boosterType;
+		[SerializeField] private Sprite sprite;
+		
+		public BoosterType BoosterType => boosterType;
+		public Sprite Sprite => sprite;
 	}
 }

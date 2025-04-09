@@ -4,20 +4,20 @@ using UnityEngine;
 
 namespace Boosters
 {
+	[RequireComponent(typeof(RectTransform))]
 	[RequireComponent(typeof(MoveToPosition))]
 	public class SidePanel : MonoBehaviour
 	{
-		[Header("Links")]
+		[Header("References")]
 		[SerializeField] private DeviceAspectRatioSO deviceAspectRatioSo;
 		[SerializeField] private VerticalGroupController verticalGroupController;
-		
-		[Header("Lists")]
 		[SerializeField] private List<SlotImage> slotImagesList;
 		
-		[Header("Settings")]
+		[Header("Animation Settings")]
 		[SerializeField] private Vector3 closePosition = new Vector3(63f, 0f, 0f);
 		[SerializeField, Range(0f, 5f)] private float moveDuration = 1f;
 		
+		private RectTransform _rectTransform;
 		private MoveToPosition _moveToPosition;
 
 		private Vector3 _startPosition;
@@ -28,31 +28,30 @@ namespace Boosters
 		
 		private void Awake()
 		{
-			_moveToPosition = GetComponent<MoveToPosition>();
-			
-			Init();
+			CacheComponents();
+			Initialize();
 		}
 
-		public void SwitchDirection()
+		public void TogglePanel()
 		{
 			if (_isOpenFrozen) return;
 			
-			Vector3 direction = _isPanelOpen ? closePosition : _startPosition;
 			_isPanelOpen = !_isPanelOpen;
 			
+			Vector3 direction = _isPanelOpen ? _startPosition : closePosition;
 			_moveToPosition.RectMove(direction, moveDuration);
 
-			if (_isLongScreen)
+			if (_isLongScreen && verticalGroupController != null)
 			{
-				verticalGroupController.SwitchDirection();
+				verticalGroupController.TogglePanel();
 			}
 		}
-		
+
 		public void OpenAndFreezePanel()
 		{
 			if (!_isPanelOpen)
 			{
-				SwitchDirection();
+				TogglePanel();
 			}
 			
 			_isOpenFrozen = true;
@@ -60,16 +59,21 @@ namespace Boosters
 
 		public SlotImage GetFreeSlotImage()
 		{
-			return slotImagesList.FirstOrDefault(x => !x.IsLocked);
+			return slotImagesList.FirstOrDefault(slot => slot != null && !slot.IsLocked);
 		}
-		
-		private void Init()
+
+		private void CacheComponents()
 		{
-			RectTransform rectTransform = GetComponent<RectTransform>();
+			_rectTransform = GetComponent<RectTransform>();
+			_moveToPosition = GetComponent<MoveToPosition>();
+		}
+
+		private void Initialize()
+		{
+			_startPosition = _rectTransform.anchoredPosition;
 			
 			_isPanelOpen = true;
 			_isOpenFrozen = false;
-			_startPosition = rectTransform.anchoredPosition;
 			
 			if (deviceAspectRatioSo != null)
 			{

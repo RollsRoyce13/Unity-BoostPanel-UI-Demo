@@ -1824,7 +1824,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1460033053}
         m_TargetAssemblyTypeName: SidePanel.SidePanel, Assembly-CSharp
-        m_MethodName: SwitchDirection
+        m_MethodName: TogglePanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
