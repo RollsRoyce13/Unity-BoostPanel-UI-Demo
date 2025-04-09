@@ -8,7 +8,7 @@ namespace Boosters
 	[RequireComponent(typeof(Image))]
 	public class BoosterButton : MonoBehaviour
 	{
-		public event Action<BoosterSO> OnItemButtonClicked;
+		public event Action<BoosterSO> OnBoosterButtonClicked;
 		
 		[Header("Links")]
 		[SerializeField] private Image highlightImage;
@@ -57,7 +57,7 @@ namespace Boosters
 		{
 			highlightImage.gameObject.SetActive(true);
 			
-			OnItemButtonClicked?.Invoke(_boosterSo);
+			OnBoosterButtonClicked?.Invoke(_boosterSo);
 		}
 
 		private void SetSprite(Sprite sprite)

@@ -10,20 +10,20 @@ namespace Boosters
 	{
 		[Header("Events")]
 		public UnityEvent OnRefreshClicked;
-		public UnityEvent<BoosterSO> OnItemClicked;
-		public UnityEvent<BoosterSO> OnItemSelected;
+		public UnityEvent<BoosterSO> OnBoosterClicked;
+		public UnityEvent<BoosterSO> OnBoosterSelected;
 		
-		[Header("Items List")]
-		[SerializeField] private List<BoosterSO> itemsList;
-		[SerializeField] private List<BoosterButton> itemButtonsList;
+		[Header("Boosters List")]
+		[SerializeField] private List<BoosterSO> boostersList;
+		[SerializeField] private List<BoosterButton> boosterButtonsList;
 		
-		[Header("Item Image Prefab")] 
+		[Header("Booster Image Prefab")] 
 		[SerializeField] private BoosterImage boosterImagePrefab;
 
-		private const int TWO_ITEMS = 2;
-		private const int THREE_ITEMS = 3;
+		private const int TWO_BOOSTERS = 2;
+		private const int THREE_BOOSTERS = 3;
 		
-		private List<BoosterSO> _currentItemsList = new List<BoosterSO>();
+		private List<BoosterSO> _currentBoostersList = new List<BoosterSO>();
 
 		private BoosterSO _currentSelectedBooster;
 
@@ -40,17 +40,17 @@ namespace Boosters
 
 		public void Refresh()
 		{
-			List<BoosterSO> shuffledItems = ShuffleItemsList();
-			List<BoosterSO> newItems = GetTwoUniqueItems(shuffledItems);
+			List<BoosterSO> shuffledBoosters = ShuffleBoostersList();
+			List<BoosterSO> newBoosters = GetTwoUniqueBoosters(shuffledBoosters);
 			
-			// Check newItems count and fill with missing items
-			while (newItems.Count < TWO_ITEMS)
+			// Check newBoosters count and fill with missing boosters
+			while (newBoosters.Count < TWO_BOOSTERS)
 			{
-				var filler = shuffledItems.FirstOrDefault(item => !newItems.Contains(item) && !_currentItemsList.Contains(item));
+				var filler = shuffledBoosters.FirstOrDefault(booster => !newBoosters.Contains(booster) && !_currentBoostersList.Contains(booster));
 				
 				if (filler != null)
 				{
-					newItems.Add(filler);
+					newBoosters.Add(filler);
 				}
 				else
 				{
@@ -58,13 +58,13 @@ namespace Boosters
 				}
 			}
 			
-			if (_currentItemsList.Count == 0)
+			if (_currentBoostersList.Count == 0)
 			{
-				_currentItemsList = shuffledItems.Take(THREE_ITEMS).ToList();
+				_currentBoostersList = shuffledBoosters.Take(THREE_BOOSTERS).ToList();
 			}
 			else
 			{
-				FillCurrentItemsList(newItems, shuffledItems);
+				FillCurrentBoostersList(newBoosters, shuffledBoosters);
 			}
 			
 			InitButtons();
@@ -73,54 +73,54 @@ namespace Boosters
 
 		public void Ok()
 		{
-			SpawnItemImage();
-			OnItemSelected?.Invoke(_currentSelectedBooster);
+			SpawnBoosterImage();
+			OnBoosterSelected?.Invoke(_currentSelectedBooster);
 			
 			Debug.Log($"Booster: {_currentSelectedBooster.BoosterType} was selected");
 		}
 
 		private void SubscribeToEvents()
 		{
-			foreach (var itemButton in itemButtonsList)
+			foreach (var boosterButton in boosterButtonsList)
 			{
-				itemButton.OnItemButtonClicked += ClickItem;
+				boosterButton.OnBoosterButtonClicked += ClickBooster;
 			}
 		}
 
 		private void UnsubscribeFromEvents()
 		{
-			foreach (var itemButton in itemButtonsList)
+			foreach (var boosterButton in boosterButtonsList)
 			{
-				itemButton.OnItemButtonClicked -= ClickItem;
+				boosterButton.OnBoosterButtonClicked -= ClickBooster;
 			}
 		}
 
-		private void FillCurrentItemsList(List<BoosterSO> newItems, List<BoosterSO> shuffledItems)
+		private void FillCurrentBoostersList(List<BoosterSO> newBoosters, List<BoosterSO> shuffledBoosters)
 		{
-			BoosterSO repeatedBooster = GetRepeatedItemFromList();
-				
-			_currentItemsList = newItems.Take(TWO_ITEMS).ToList();
+			BoosterSO repeatedBooster = GetRepeatedBoosterFromList();
+			
+			_currentBoostersList = newBoosters.Take(TWO_BOOSTERS).ToList();
         
-			if (repeatedBooster != null && !_currentItemsList.Contains(repeatedBooster))
+			if (repeatedBooster != null && !_currentBoostersList.Contains(repeatedBooster))
 			{
-				_currentItemsList.Add(repeatedBooster);
+				_currentBoostersList.Add(repeatedBooster);
 			}
 				
-			if (_currentItemsList.Count < THREE_ITEMS)
+			if (_currentBoostersList.Count < THREE_BOOSTERS)
 			{
-				var additionalItem = shuffledItems.FirstOrDefault(item => !_currentItemsList.Contains(item));
+				var additionalBooster = shuffledBoosters.FirstOrDefault(booster => !_currentBoostersList.Contains(booster));
 					
-				if (additionalItem != null)
+				if (additionalBooster != null)
 				{
-					_currentItemsList.Add(additionalItem);
+					_currentBoostersList.Add(additionalBooster);
 				}
 			}
 		}
 
-		private void ClickItem(BoosterSO booster)
+		private void ClickBooster(BoosterSO booster)
 		{
 			_currentSelectedBooster = booster;
-			OnItemClicked?.Invoke(_currentSelectedBooster);
+			OnBoosterClicked?.Invoke(_currentSelectedBooster);
 			
 			DisableHighlight();
 			Debug.Log($"Button with booster: {_currentSelectedBooster.BoosterType} was clicked");
@@ -128,25 +128,25 @@ namespace Boosters
 
 		private void InitButtons()
 		{
-			for (var i = 0; i < _currentItemsList.Count; i++)
+			for (var i = 0; i < _currentBoostersList.Count; i++)
 			{
-				itemButtonsList[i].Init(_currentItemsList[i]);
+				boosterButtonsList[i].Init(_currentBoostersList[i]);
 			}
 		}
 		
 		private void DisableHighlight()
 		{
-			foreach (var itemButton in itemButtonsList)
+			foreach (var boosterButton in boosterButtonsList)
 			{
-				if (itemButton.BoosterSo == _currentSelectedBooster) continue;
+				if (boosterButton.BoosterSo == _currentSelectedBooster) continue;
 				
-				itemButton.DisableHighlight();
+				boosterButton.DisableHighlight();
 			}
 		}
 
-		private void SpawnItemImage()
+		private void SpawnBoosterImage()
 		{
-			BoosterButton targetObject = itemButtonsList
+			BoosterButton targetObject = boosterButtonsList
 				.FirstOrDefault(x => x.BoosterSo == _currentSelectedBooster);
 
 			if (targetObject != null)
@@ -160,30 +160,30 @@ namespace Boosters
 			}
 		}
 		
-		private List<BoosterSO> ShuffleItemsList()
+		private List<BoosterSO> ShuffleBoostersList()
 		{
-			List<BoosterSO> shuffledItems = itemsList
+			List<BoosterSO> shuffledBoosters = boostersList
 				.OrderBy(_ => Random.value)
 				.ToList();
 
-			return shuffledItems;
+			return shuffledBoosters;
 		}
 		
-		private List<BoosterSO> GetTwoUniqueItems(List<BoosterSO> items)
+		private List<BoosterSO> GetTwoUniqueBoosters(List<BoosterSO> boosters)
 		{
-			List<BoosterSO> newItems = items
-				.Where(item => !_currentItemsList.Contains(item))
-				.Take(TWO_ITEMS)
+			List<BoosterSO> newBoosters = boosters
+				.Where(booster => !_currentBoostersList.Contains(booster))
+				.Take(TWO_BOOSTERS)
 				.ToList();
 
-			return newItems;
+			return newBoosters;
 		}
 
-		private BoosterSO GetRepeatedItemFromList()
+		private BoosterSO GetRepeatedBoosterFromList()
 		{
 			BoosterSO repeatedBooster = null;
 			
-			repeatedBooster = _currentItemsList
+			repeatedBooster = _currentBoostersList
 				.OrderBy(_ => Random.value)
 				.FirstOrDefault();
 
