@@ -17,7 +17,7 @@ namespace Boosters
 		
 		public void FadeIn()
 		{
-			_canvasGroup.DOFade(1f, duration).SetEase(Ease.Linear);
+			_tween = _canvasGroup.DOFade(1f, duration).SetEase(easeType);
 		}
 	}
 }
